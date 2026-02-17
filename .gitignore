@@ -1,0 +1,21 @@
+# Database
+database/database.sqlite
+database/*.db
+
+# Uploads (User Content)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Project Dependencies
+node_modules/
+vendor/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Logs & Temporary Files
+*.log
+tmp/
+.vscode/
+.idea/
