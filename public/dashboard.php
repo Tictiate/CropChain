@@ -35,6 +35,7 @@ $username = $_SESSION['username'];
             </span></div>
         <div>
             <a href="marketplace.php">Marketplace</a>
+            <a href="directory.php">Directory</a>
             <a href="logout.php">Logout</a>
         </div>
     </div>
@@ -215,8 +216,8 @@ endif; ?>
                 // Retailer shares the same view logic as Distributor for now
                 document.getElementById('distributorView').classList.add('active');
                 document.querySelectorAll('.toggle-btn')[2].classList.add('active');
-         
-  
+
+
     </script>
 </body>
 

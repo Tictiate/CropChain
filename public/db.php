@@ -13,6 +13,9 @@ try {
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         role TEXT NOT NULL,
+        email TEXT,
+        phone TEXT,
+        location TEXT,
         wallet_address TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )";
@@ -33,7 +36,8 @@ try {
     )";
     $pdo->exec($queryLogs);
 
-} catch (PDOException $e) {
+}
+catch (PDOException $e) {
     die("Database Connection failed: " . $e->getMessage());
 }
 ?>

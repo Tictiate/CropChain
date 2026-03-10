@@ -4,25 +4,47 @@ require_once 'db.php';
 
 echo "<h2>🌱 Seeding Database...</h2>";
 
-// 1. Clear existing test users/logs (optional, but good for reset)
-// $pdo->exec("DELETE FROM users WHERE username LIKE '%_test'");
-// $pdo->exec("DELETE FROM crop_logs");
+// 1. Reset Database
+$pdo->exec("DROP TABLE IF EXISTS users");
+
+// Re-create Users Table with new schema
+$query = "CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL,
+    email TEXT,
+    phone TEXT,
+    location TEXT,
+    wallet_address TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)";
+$pdo->exec($query);
 
 // 2. Create Test Users
 $users = [
-    ['username' => 'farmer_test', 'password' => 'password123', 'role' => 'Farmer'],
-    ['username' => 'dist_test', 'password' => 'password123', 'role' => 'Distributor'],
-    ['username' => 'retail_test', 'password' => 'password123', 'role' => 'Retailer'],
-    ['username' => 'consumer_test', 'password' => 'password123', 'role' => 'Consumer'],
-    ['username' => 'admin_test', 'password' => 'password123', 'role' => 'Admin']
+    ['username' => 'farmer_test', 'password' => 'password123', 'role' => 'Farmer', 'email' => 'farmer@cropchain.com', 'phone' => '+91-9876543210', 'location' => 'Punjab, India'],
+    ['username' => 'dist_test', 'password' => 'password123', 'role' => 'Distributor', 'email' => 'distributor@logistics.com', 'phone' => '+91-9876543211', 'location' => 'New Delhi, India'],
+    ['username' => 'retail_test', 'password' => 'password123', 'role' => 'Retailer', 'email' => 'retailer@freshmart.com', 'phone' => '+91-9876543212', 'location' => 'Mumbai, India'],
+    ['username' => 'consumer_test', 'password' => 'password123', 'role' => 'Consumer', 'email' => 'consumer@gmail.com', 'phone' => '+91-9876543213', 'location' => 'Bangalore, India'],
+    ['username' => 'admin_test', 'password' => 'password123', 'role' => 'Admin', 'email' => 'admin@cropchain.com', 'phone' => '+91-0000000000', 'location' => 'HQ']
 ];
+
+// Add some more mock users
+$extra_users = [
+    ['username' => 'ramesh_farmer', 'password' => 'password123', 'role' => 'Farmer', 'email' => 'ramesh@kisan.com', 'phone' => '+91-9812345678', 'location' => 'Haryana, India'],
+    ['username' => 'fresh_logistics', 'password' => 'password123', 'role' => 'Distributor', 'email' => 'contact@freshlogistics.in', 'phone' => '+91-9988776655', 'location' => 'Pune, Maharashtra'],
+    ['username' => 'green_grocers', 'password' => 'password123', 'role' => 'Retailer', 'email' => 'store@greengrocers.com', 'phone' => '+91-9123456789', 'location' => 'Chennai, Tamil Nadu']
+];
+
+$users = array_merge($users, $extra_users);
 
 foreach ($users as $u) {
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (username, password, role, wallet_address) VALUES (?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, role, email, phone, location, wallet_address) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $wallet = '0xTest' . bin2hex(random_bytes(4));
         $passHash = password_hash($u['password'], PASSWORD_DEFAULT);
-        $stmt->execute([$u['username'], $passHash, $u['role'], $wallet]);
+        $stmt->execute([$u['username'], $passHash, $u['role'], $u['email'], $u['phone'], $u['location'], $wallet]);
         echo "✅ Created User: {$u['username']} ({$u['role']})<br>";
     }
     catch (PDOException $e) {
