@@ -37,10 +37,20 @@ export default function LoginPage() {
             <input type="password" name="password" className="form-control" required />
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-            Login
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-md)', fontSize: '0.85rem' }}>
+          <h4 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>🧪 Test Credentials</h4>
+          <p style={{ opacity: 0.8, marginBottom: '0.5rem' }}>Use these to explore the platform:</p>
+          <ul style={{ listStyle: 'none', padding: 0, opacity: 0.9 }}>
+            <li><strong>Farmer:</strong> farmer_test / password123</li>
+            <li><strong>Distributor:</strong> dist_test / password123</li>
+            <li><strong>Retailer:</strong> retail_test / password123</li>
+          </ul>
+        </div>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', opacity: 0.8 }}>
           Don't have an account? <Link href="/register" style={{ color: 'var(--primary)' }}>Register</Link>
