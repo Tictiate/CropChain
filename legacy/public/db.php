@@ -1,16 +1,26 @@
 <?php
 // public/db.php
 
-$db_path = __DIR__ . '/../database/database.sqlite';
+$host = '127.0.0.1';
+$db   = 'cropchain';
+$user = 'root';
+$pass = 'Ishaan@11';
+$charset = 'utf8mb4';
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
 
 try {
-    $pdo = new PDO("sqlite:$db_path");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO($dsn, $user, $pass, $options);
 
     // Create Users Table if not exists
     $query = "CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL UNIQUE,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE,
         password TEXT NOT NULL,
         role TEXT NOT NULL,
         email TEXT,
@@ -23,7 +33,7 @@ try {
 
     // Create Crop Logs Table (for offline/marketplace caching)
     $queryLogs = "CREATE TABLE IF NOT EXISTS crop_logs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         product_id INTEGER,
         farmer_id INTEGER,
         crop_name TEXT,

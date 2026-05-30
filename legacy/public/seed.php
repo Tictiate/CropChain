@@ -5,21 +5,10 @@ require_once 'db.php';
 echo "<h2>🌱 Seeding Database...</h2>";
 
 // 1. Reset Database
-$pdo->exec("DROP TABLE IF EXISTS users");
-
-// Re-create Users Table with new schema
-$query = "CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    role TEXT NOT NULL,
-    email TEXT,
-    phone TEXT,
-    location TEXT,
-    wallet_address TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)";
-$pdo->exec($query);
+$pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+$pdo->exec("TRUNCATE TABLE crop_logs");
+$pdo->exec("TRUNCATE TABLE users");
+$pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
 // 2. Create Test Users
 $users = [
@@ -73,7 +62,7 @@ echo "<br><strong>Creating Mock Crop Logs...</strong><br>";
 $pdo->exec("DELETE FROM crop_logs");
 
 foreach ($crops as $i => $c) {
-    $stmt = $pdo->prepare("INSERT INTO crop_logs (product_id, farmer_id, crop_name, quality, quantity, expected_price, location, logged_at) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now', '-$i days'))");
+    $stmt = $pdo->prepare("INSERT INTO crop_logs (product_id, farmer_id, crop_name, quality, quantity, expected_price, location, logged_at) VALUES (?, ?, ?, ?, ?, ?, ?, DATE_SUB(NOW(), INTERVAL $i DAY))");
     // Mock Product IDs with 6 digits
     $stmt->execute([890123 + $i, $farmerId, $c[0], $c[1], $c[2], $c[3], $c[4]]);
     echo "✅ Logged: {$c[0]} at {$c[4]} (ID: " . (890123 + $i) . ")<br>";

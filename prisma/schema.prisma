@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  username       String     @unique
+  password       String
+  role           String     // "farmer", "distributor", "retailer", "consumer", "admin"
+  email          String?
+  phone          String?
+  location       String?
+  wallet_address String?
+  created_at     DateTime   @default(now())
+
+  crop_logs      CropLog[]
+}
+
+model CropLog {
+  id             Int      @id @default(autoincrement())
+  product_id     Int?
+  farmer_id      Int
+  crop_name      String
+  quality        String?
+  quantity       String?
+  expected_price Float?
+  location       String?
+  image_url      String?
+  logged_at      DateTime @default(now())
+
+  farmer         User     @relation(fields: [farmer_id], references: [id])
+}
